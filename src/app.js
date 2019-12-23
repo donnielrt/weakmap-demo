@@ -43,6 +43,8 @@ app.use(async (ctx, next) => {
   }
 });
 
+app.use(require('koa-static')(__dirname + '/public'));
+
 // Views
 app.use(
   views(__dirname + "/views", {

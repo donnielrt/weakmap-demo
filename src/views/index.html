@@ -5,8 +5,22 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>WeakMap demo</title>
+  <link href="css/main.css" rel="stylesheet" />
 </head>
 <body>
-  Hello World!
+  <main class="container">
+    <section class="gauntlet">
+      <fieldset>
+        <button id="fill-object" type="button" class="button">Fill heap with objects</button>
+        <button id="fill-map" type="button" class="button">Fill heap with Maps</button>
+        <button id="fill-weakmap" type="button" class="button">Fill heap with WeakMaps</button>
+        <!-- <button id="query-random-value" type="button" class="button">Query random value</button> -->
+
+        <button id="clear-heap" type="button">Clear heap</button>
+      </fieldset>
+      <ul class="results" id="results-container"></div>
+    </section>
+  </main>
+  <script type="module" src="js/main.js"></script>
 </body>
 </html>

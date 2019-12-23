@@ -11,10 +11,35 @@
   <main class="container">
     <section class="gauntlet">
       <fieldset>
-        <button id="fill-heap" type="button" class="button">Fill heap</button>
+        <legend class="fieldset-title">Assign values</legend>
 
+        <p>
+          <label for="use-object">
+            <input id="use-object" name="object-type" type="radio" value="object" checked></input>
+            Use Object
+          </label>
+          <label for="use-map">
+            <input id="use-map" name="object-type" type="radio" value="map"></input>
+            Use Map
+          </label>
+          <label for="use-weakmap">
+            <input id="use-weakmap" name="object-type" type="radio" value="weakmap"></input>
+            Use WeakMap
+          </label>
+        </p>
+
+        <button id="fill-heap" type="button">Fill heap</button>
         <button id="thanosify" type="button">Thanosify</button>
+        <button id="expire-keys" type="button">Expire WeakMap keys</button>
       </fieldset>
+
+      <fieldset>
+        <legend class="fieldset-title">Lookup values</legend>
+
+        <input id="object-index" type="text" />
+        <button id="query-object" type="button">Query</button>
+      </fieldset>
+
       <ul class="results" id="results-container"></div>
     </section>
   </main>

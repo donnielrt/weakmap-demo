@@ -1,7 +1,13 @@
-const objectCount = 100000;
+const objectCount = 1000000;
 
 let data;
 let objectType = 'object';
+
+const fillDataButton = document.getElementById("fill-data");
+const thanosifyKeysButton = document.getElementById("thanosify-keys");
+const queryObjectButton = document.getElementById("query-object");
+const objectTypeRadios = document.querySelectorAll('input[name="object-type"]');
+const indexRange = document.getElementById('index-range');
 
 class ObjectData {
   constructor() {
@@ -88,22 +94,11 @@ function fillData() {
   for (let ctr = 0; ctr < objectCount; ctr++) {
     data.set(ctr, Math.floor(Math.random() * 10));
   }
+  enableControls(true);
   printData();
 }
 
-// Set odd half of all values to `undefined` to simulate objects being removed
-// from the heap at runtime. This will let us see if the garbage collector culls
-// these values.
-function thanosify() {
-  for (let ctr = 0; ctr < objectCount; ctr++) {
-    if (ctr % 2 === 0) {
-      data.set(ctr, undefined);
-    }
-  }
-  printData();
-}
-
-function expireKeys() {
+function thanosifyKeys() {
   if (objectType === 'object') {
     console.log(`Cannot delete keys on Objects`);
     return;
@@ -115,34 +110,37 @@ function expireKeys() {
     }
   }
 
-  console.log('Keys deleted');
+  console.log('Half of the keys have been deleted');
 }
 
 function queryObject() {
   const objectIndexInput = document.getElementById('object-index');
   const index = parseInt(objectIndexInput.value, 10);
 
-  console.log(`Looking up ${index}`, data.get(index));
+  console.log(`Value of key ${index}:`, data.get(index));
 }
 
 function setObjectType(event) {
   objectType = event.target.value;
+  enableControls(false);
 }
 
-function attachListeners() {
-  const fillHeapButton = document.getElementById("fill-heap");
-  const thanosifyButton = document.getElementById("thanosify");
-  const expireKeysButton = document.getElementById("expire-keys");
-  const queryObjectButton = document.getElementById("query-object");
-  const objectTypeRadios = document.querySelectorAll('input[name="object-type"]');
+function enableControls(state) {
+  const method = state ? 'removeAttribute' : 'setAttribute';
+  queryObjectButton[method]('disabled', true);
+  thanosifyKeysButton[method]('disabled', true);
+}
 
-  fillHeapButton.addEventListener("click", fillData);
-  thanosifyButton.addEventListener("click", thanosify);
-  expireKeysButton.addEventListener("click", expireKeys);
+function init() {
+  fillDataButton.addEventListener("click", fillData);
+  thanosifyKeysButton.addEventListener("click", thanosifyKeys);
   queryObjectButton.addEventListener("click", queryObject);
   objectTypeRadios.forEach((el) => {
     el.addEventListener("change", setObjectType);
   });
+
+  enableControls(false);
+  indexRange.innerHTML = `(0 - ${objectCount - 1})`;
 }
 
-attachListeners();
+init();

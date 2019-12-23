@@ -14,29 +14,25 @@
         <legend class="fieldset-title">Assign values</legend>
 
         <p>
-          <label for="use-object">
-            <input id="use-object" name="object-type" type="radio" value="object" checked></input>
-            Use Object
-          </label>
-          <label for="use-map">
-            <input id="use-map" name="object-type" type="radio" value="map"></input>
-            Use Map
-          </label>
-          <label for="use-weakmap">
-            <input id="use-weakmap" name="object-type" type="radio" value="weakmap"></input>
-            Use WeakMap
-          </label>
+          <input id="use-object" name="object-type" type="radio" value="object" checked></input>
+          <label for="use-object">Use Object</label>
+          
+          <input id="use-map" name="object-type" type="radio" value="map"></input>
+          <label for="use-map">Use Map</label>
+          
+          <input id="use-weakmap" name="object-type" type="radio" value="weakmap"></input>
+          <label for="use-weakmap">Use WeakMap</label>
         </p>
 
-        <button id="fill-heap" type="button">Fill heap</button>
-        <button id="thanosify" type="button">Thanosify</button>
-        <button id="expire-keys" type="button">Expire WeakMap keys</button>
+        <button id="fill-data" type="button">Fill data</button>
+        <button id="thanosify-keys" type="button">Thanosify keys</button>
       </fieldset>
 
       <fieldset>
-        <legend class="fieldset-title">Lookup values</legend>
+        <legend class="fieldset-title">Lookup values by key</legend>
 
-        <input id="object-index" type="text" />
+        <label for="object-index">Key: <span id="index-range"></span></label>
+        <input id="object-index" type="text" value="0" />
         <button id="query-object" type="button">Query</button>
       </fieldset>
 

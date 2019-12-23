@@ -1,19 +1,20 @@
 const objectCount = 1000000;
 
 let data;
-let objectType = 'object';
+let objectType = "object";
 
+const logger = document.getElementById("logger");
 const fillDataButton = document.getElementById("fill-data");
 const thanosifyKeysButton = document.getElementById("thanosify-keys");
 const queryObjectButton = document.getElementById("query-object");
 const objectTypeRadios = document.querySelectorAll('input[name="object-type"]');
-const indexRange = document.getElementById('index-range');
+const indexRange = document.getElementById("index-range");
 
 class ObjectData {
   constructor() {
     this.data = new Object();
   }
-  
+
   set(key, value) {
     this.data[key] = value;
   }
@@ -29,14 +30,14 @@ class MapData {
   constructor() {
     this.data = new Map();
   }
-  
+
   set(key, value) {
     let weakmapKey = this.keys.get(key);
     if (weakmapKey == null) {
-      this.keys.set(key, {key});
+      this.keys.set(key, { key });
       weakmapKey = this.keys.get(key);
     }
-    
+
     this.data.set(weakmapKey, value);
   }
 
@@ -56,13 +57,13 @@ class WeakMapData {
   constructor() {
     this.data = new WeakMap();
   }
-  
+
   set(key, value) {
     // Gotcha alert! We can't just set a new key every time, because
     // the old key wont be !== the new key in memory.
     let weakmapKey = this.keys.get(key);
     if (weakmapKey == null) {
-      this.keys.set(key, {key});
+      this.keys.set(key, { key });
       weakmapKey = this.keys.get(key);
     }
 
@@ -80,17 +81,33 @@ class WeakMapData {
 }
 
 const constructors = {
-  'object': ObjectData,
-  'map': MapData,
-  'weakmap': WeakMapData,
+  object: ObjectData,
+  map: MapData,
+  weakmap: WeakMapData
 };
 
 function printData() {
-  console.log(`${objectType} data:`, data);
+  log(`${objectType} data:`, data);
+}
+
+function log(...messages) {
+  logger.innerHTML += `<p>${messages
+    .map(message => {
+      const output =
+        typeof message === "string"
+          ? message
+          : JSON.stringify(message, null, 2);
+      return output == null
+        ? `undefined`
+        : output.length > 100
+        ? `${output.slice(0, 100)}...`
+        : output;
+    })
+    .join("\t")}</p>`;
 }
 
 function fillData() {
-  data = new constructors[objectType];
+  data = new constructors[objectType]();
   for (let ctr = 0; ctr < objectCount; ctr++) {
     data.set(ctr, Math.floor(Math.random() * 10));
   }
@@ -99,8 +116,8 @@ function fillData() {
 }
 
 function thanosifyKeys() {
-  if (objectType === 'object') {
-    console.log(`Cannot delete keys on Objects`);
+  if (objectType === "object") {
+    log(`Cannot delete keys on Objects`);
     return;
   }
 
@@ -110,14 +127,15 @@ function thanosifyKeys() {
     }
   }
 
-  console.log('Half of the keys have been deleted');
+  thanosifyKeysButton.setAttribute("disabled", true);
+  log("Half of the keys have been deleted");
 }
 
 function queryObject() {
-  const objectIndexInput = document.getElementById('object-index');
+  const objectIndexInput = document.getElementById("object-index");
   const index = parseInt(objectIndexInput.value, 10);
 
-  console.log(`Value of key ${index}:`, data.get(index));
+  log(`Value of key ${index}:`, data.get(index));
 }
 
 function setObjectType(event) {
@@ -126,16 +144,16 @@ function setObjectType(event) {
 }
 
 function enableControls(state) {
-  const method = state ? 'removeAttribute' : 'setAttribute';
-  queryObjectButton[method]('disabled', true);
-  thanosifyKeysButton[method]('disabled', true);
+  const method = state ? "removeAttribute" : "setAttribute";
+  queryObjectButton[method]("disabled", true);
+  thanosifyKeysButton[method]("disabled", true);
 }
 
 function init() {
   fillDataButton.addEventListener("click", fillData);
   thanosifyKeysButton.addEventListener("click", thanosifyKeys);
   queryObjectButton.addEventListener("click", queryObject);
-  objectTypeRadios.forEach((el) => {
+  objectTypeRadios.forEach(el => {
     el.addEventListener("change", setObjectType);
   });
 

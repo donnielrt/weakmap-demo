@@ -6,3 +6,11 @@ body {
 fieldset {
   margin-bottom: 1rem;
 }
+
+.logger {
+  font-family: monospace;
+  padding: 0.5rem;
+  height: 20rem;
+  overflow-y: scroll;
+  border: 1px dotted #eaeaea;
+}

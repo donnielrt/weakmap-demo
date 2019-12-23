@@ -10,7 +10,7 @@ This demo is an attempt at my trying to see this in action.
 
 ### How to use the demo
 
-To run the server, run `yarn install && yarn dev` and open http://localhost:8080 in the browser. Make sure to keep the console open to see logs from the demo.
+To run the server, run `yarn install && yarn dev` and open http://localhost:8080 in the browser.
 
 The radio options at the top allow you to use `Objects`, `Maps` or `WeakMaps` to store a random set of data. Choose one of them, and click `Fill data` to populate variables with some random data. Use the `Lookup values by key` to see the values by key (index).
 

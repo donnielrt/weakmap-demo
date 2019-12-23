@@ -1,67 +1,64 @@
-const objectCount = 1000000;
+const objectCount = 100000;
 
-let objectHeap = {
-  data: [],
-};
+let objectHeap = {};
 let mapHeap = new Map();
 let weakMapHeap = new WeakMap();
+let weakMapKeys = [];
 
+function printStatus() {
+  console.log(
+    "Object heap",
+    objectHeap,
+    "Size: ",
+    Object.keys(objectHeap).length
+  );
+  console.log("Map heap", mapHeap, "Size: ", mapHeap.size);
+  console.log("Object heap", weakMapHeap, "Size: ", weakMapHeap.size);
+}
+
+// Fill the different dictionary-types with random data
 function createObjects() {
-  let refs = [];
   for (let ctr = 0; ctr < objectCount; ctr++) {
-    refs.push(Math.floor(Math.random() * 10));
+    objectHeap[ctr] = {
+      data: Math.floor(Math.random() * 10)
+    };
+    mapHeap.set(ctr, {
+      data: Math.floor(Math.random() * 10)
+    });
+
+    weakMapKeys[ctr] = { key: ctr };
+    weakMapHeap.set(weakMapKeys[ctr], {
+      data: Math.floor(Math.random() * 10)
+    });
   }
-
-  return refs;
+  printStatus();
 }
 
-function populate(target) {
-  return () => {
-    switch(target) {
-      case 'object':
-        objectHeap['data'] = createObjects();
-        console.log('Object heap created', objectHeap);
-        break;
+// Set odd half of all values to `undefined` to simulate objects being removed
+// from the heap at runtime. This will let us see if the garbage collector culls
+// these values
+function thanosify() {
+  for (let ctr = 0; ctr < objectCount; ctr++) {
+    if (ctr % 2 === 0) {
+      objectHeap[ctr] = undefined;
+      mapHeap.set(ctr, undefined);
+      
+      // This is a gotcha! The below won't work, because { key: ctr } is a 
+      // new object in memory and !== { key: ctr }
+      // weakMapHeap.set({ key: ctr }, undefined);
 
-      case 'map':
-        mapHeap.set('data', createObjects());
-        console.log('Map heap created', mapHeap);
-        break;
-
-      case 'weakmap':
-        weakMapHeap.set({key: 'data'}, createObjects());
-        console.log('WeakMap heap created', weakMapHeap)
-        break;
+      weakMapHeap.set(weakMapKeys[ctr], undefined);
     }
-  };
-}
-
-// function queryValue(target) {
-//   const key = Math.floor(Math.random() * objectCount);
-  
-//   switch(target) {
-
-//   }
-//   console.log(`Value at ${key} is value`);
-// }
-
-function clearHeap() {
-  objectHeap['data'] = [];
-  mapHeap['data'] = [];
-  weakMapHeap['data'] = [];
-  console.log('Heap cleared');
+  }
+  printStatus();
 }
 
 function attachListeners() {
-  const fillObjectButton = document.getElementById('fill-object');
-  const fillMapButton = document.getElementById('fill-map');
-  const fillWeakMapButton = document.getElementById('fill-weakmap');
-  const clearHeapButton = document.getElementById('clear-heap');
+  const fillHeapButton = document.getElementById("fill-heap");
+  const thanosifyButton = document.getElementById("thanosify");
 
-  fillObjectButton.addEventListener('click', populate('object'))
-  fillMapButton.addEventListener('click', populate('map'))
-  fillWeakMapButton.addEventListener('click', populate('weakmap'))
-  clearHeapButton.addEventListener('click', clearHeap);
+  fillHeapButton.addEventListener("click", createObjects);
+  thanosifyButton.addEventListener("click", thanosify);
 }
 
 attachListeners();
